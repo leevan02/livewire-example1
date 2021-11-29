@@ -6,16 +6,17 @@ use App\Models\Classes;
 use App\Models\pnumber;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
-class Student extends Model
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+class Student extends  Authenticatable
 {
-    use HasFactory;
+    use Notifiable;
 
-    protected $table='students';
+    protected $guard='students';
 
     protected $fillable = 
     [
-    'fname','lname','email','password','dob','class_id','subject_choice_id'];
+    'name','gender','email','password','dob','status'];
 
     
       /**

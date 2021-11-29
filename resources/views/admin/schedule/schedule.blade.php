@@ -1,9 +1,5 @@
 @extends('layouts.adminLayout')
 @section('content')
-
-    <div class="container pt-4">
-
-
-
-    </div>
+@livewire('admin.schedule.schedule-list')
+    
 @endsection

@@ -6,8 +6,8 @@ class="collapse d-lg-block sidebar collapse bg-white"
 <div class="position-sticky">
 <div class="list-group list-group-flush mx-3 mt-4">
  <a
-    href="/"
-    class="list-group-item list-group-item-action py-2 ripple {{ request()->is('/') ? 'active' : '' }}"
+    href="dashboard"
+    class="list-group-item list-group-item-action py-2 ripple {{ request()->is('dashboard') ? 'active' : '' }}"
     aria-current="true"
     >
    <i class="fas fa-tachometer-alt fa-fw me-3"></i
@@ -18,17 +18,26 @@ class="collapse d-lg-block sidebar collapse bg-white"
     class="list-group-item list-group-item-action py-2 ripple {{ request()->is('admin/user') ? 'active' : '' }} "
     ><i class="fas fa-users fa-fw me-3"></i><span>Users</span></a
    >
+   <a
+   href="{{ url('admin/Teacher') }}"
+   class="list-group-item list-group-item-action py-2 ripple {{ request()->is('admin/Teacher') ? 'active' : '' }} "
+   ><i class="fas fa-users fa-fw me-3"></i><span>Teacher</span></a
+  >
  <a
-    href="{{ url('type_of_discussion') }}"
-    class="list-group-item list-group-item-action py-2 ripple "
-    ><i class="fas fa-braille me-3"></i><span>Discussions Type</span></a
+    href="{{ url('admin/subject') }}"
+    class="list-group-item list-group-item-action py-2 ripple  {{ request()->is('admin/subject') ? 'active' : '' }} "
+    ><i class="fas fa-braille me-3"></i><span>subjects</span></a
    >
- <a
-    href="#"
-    class="list-group-item list-group-item-action py-2 ripple "
-    ><i class="fas fa-chart-line fa-fw me-3"></i
-   ><span>Analytics</span></a
-   >
+   <a
+   href="{{ url('admin/schedule') }}"
+   class="list-group-item list-group-item-action py-2 ripple  {{ request()->is('admin/schedule') ? 'active' : '' }} "
+   ><i class="fas fa-braille me-3"></i><span>schedule</span></a
+  >
+   <a
+   href="{{ url('classes') }}"
+   class="list-group-item list-group-item-action py-2 ripple {{ request()->is('classes') ? 'active' : '' }} "
+   ><i class="fas fa-users fa-fw me-3"></i><span>Classes</span></a
+  >
  <a
     href="#"
     class="list-group-item list-group-item-action py-2 ripple"

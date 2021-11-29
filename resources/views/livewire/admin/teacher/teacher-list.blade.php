@@ -2,7 +2,7 @@
 
     <div class="container pt-4">
      <button wire:click.prevent="addNew" type="button" class="btn btn-primary" data-original-title="" title="">
-                Add User
+                Add Teacher
             </button>
 
         <div class="card">
@@ -25,38 +25,40 @@
 
                         <th scope="col">Phone number</th>
                         <th scope="col">Class</th>
-                        <th scope="col">Subject Chioces</th>
-                        <th scope="col">created</th>
+                        
+                        <th scope="col">status</th>
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                    @foreach ($users as $user)
+                    @foreach ($teachers as $teacher)
                         
                   
                         <tr>
                         <th scope="row">{{$loop->iteration}}</th>
-                        <td>{{$user->fname}} {{$user->lname}}</td>
-                         <td>{{$user->email}}</td>
+                        <td>{{$teacher->name}}</td>
+                         <td>{{$teacher->email}}</td>
 
-                        <td>{{$user->dob}}</td>
+                        <td>{{$teacher->dob}}</td>
 
-                        <td>{{$user->pnumber_id}}</td>
-                        <td>{{$user->classes_id}}</td>
-                        <td>{{$user->subject_chioce_id}}</td>
+                        <td>{{$teacher->pnumber_id}}</td>
+                        <td> <button wire:click.prevent="ConfirmDelete({{$teacher->id}})" type="button" rel="tooltip" class="btn btn-primary btn-just-icon btn-sm" data-original-title="" title="">
+                          <i class="material-icons">view classes</i>
+                      </button></td>
+                        
 
 
 
-                        <td>{{$user->created_at}}</td>
+                        <td>{{$teacher->status}}</td>
                         <td>
                             <button wire:click.prevent="edit({{
                               
-                                                $user
+                                                $teacher
                               
                                }})" type="button" rel="tooltip" class="btn btn-success btn-just-icon btn-sm" data-original-title="" title="">
                                 <i class="material-icons">edit</i>
                             </button>
-                            <button wire:click.prevent="ConfirmDelete({{$user->id}})" type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="">
+                            <button wire:click.prevent="ConfirmDelete({{$teacher->id}})" type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="">
                                 <i class="material-icons">Remove</i>
                             </button>
                         </td>
@@ -67,7 +69,7 @@
                   </table>
             </div>
             <div class="card-footer">
-              {{  $users->links()}}
+              {{  $teachers->links()}}
             </div>
             
 
@@ -91,15 +93,15 @@
   <!-- Modal -->
 <div class="modal fade" id="form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
     <div class="modal-dialog">     
-                   <form autocomplete="off" wire:submit.prevent="{{ $ShowEditModel ?  'update' : 'CreateUser' }}">
+                   <form autocomplete="off" wire:submit.prevent="{{ $ShowEditModel ?  'update' : 'CreateTeacher' }}">
 
                         <div class="modal-content">
                           <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
                                 @if ($ShowEditModel)
-                                <span>Edit User</span>
+                                <span>Edit teacher</span>
                                 @else
-                                <span>Add New User</span>
+                                <span>Add New Teacher</span>
                                 @endif
                               
                             </h5>
@@ -109,10 +111,10 @@
 
 
                         <div class="mb-3">
-                            <label for="fname" class="form-label">First Name</label>
-                            <input wire:model.defer="state.fname" type="text" class="form-control  @error('fname') is-invalid @enderror" id="fname" aria-describedby="nameHelp ">
+                            <label for="name" class="form-label">First Name</label>
+                            <input wire:model.defer="state.name" type="text" class="form-control  @error('name') is-invalid @enderror" id="fname" aria-describedby="nameHelp ">
                         
-                          @error('fname')
+                          @error('name')
                           
                            <div class="invalid-feedback">
                                {{$message}}
@@ -121,18 +123,7 @@
 
                         </div>
 
-                        <div class="mb-3">
-                          <label for="lname" class="form-label">Last Name</label>
-                          <input wire:model.defer="state.lname" type="text" class="form-control  @error('lname') is-invalid @enderror" id="lname" aria-describedby="nameHelp ">
-                      
-                        @error('lname')
-                        
-                         <div class="invalid-feedback">
-                             {{$message}}
-                         </div>
-                        @enderror
-
-                      </div>
+                       
 
                       <div class="mb-3">
                         <label for="dob" class="form-label">D.O.B</label>
@@ -156,6 +147,15 @@
                           @enderror
                         </div>
 
+
+                        <div class="mb-3">
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>change status</option>
+                          <option value="pending">pending</option>
+                          <option value="active">active</option>
+                         
+                        </select>
+                        </div>
 
                         <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
@@ -183,7 +183,7 @@
                           @if ($ShowEditModel)
                           <span>Save Changes</span>
                           @else
-                          <span>Add New User</span>
+                          <span>Add New Teacher</span>
                           @endif
 
                         </button>
@@ -224,7 +224,7 @@
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
 
-                  Delete User
+                  Delete Teacher
                 </h5>
               </div>
 
@@ -232,15 +232,42 @@
 
                 <h5 class="" id="">
 
-                  Are you sure you want to delete this user ?
+                  Are you sure you want to delete this Teacher ?
                 </h5>
               </div>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                        <button id="button1" type="button" wire:click.prevent="deleteuser" class="btn btn-danger">Remove</button>
+                        <button id="button1" type="button" wire:click.prevent="deleteTeacher" class="btn btn-danger">Remove</button>
               </div>
              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<!-- End Add User Modal -->
+
+
+
+
+
+
+
+
+
 
     </div>
   </div>

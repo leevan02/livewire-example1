@@ -6,13 +6,18 @@ use App\Models\User;
 use App\Models\Student;
 use Livewire\Component;
 use Illuminate\Support\Facades\Validator;
+use Livewire\WithPagination;
 
 class UsersList extends Component
 {
+    use WithPagination;
+
 
     public $state=[];
 
     public $ShowEditModel = false;
+
+    public $UserBeingRemoved = null;
 
     public $user;
 
@@ -35,15 +40,15 @@ class UsersList extends Component
     { 
         $validatedData= Validator::make($this->state, [
              
-                    'fname' => 'required',
-                    'lname' => 'required',
-                    'dob' => 'required',
+            'fname' => 'required',
+            'lname' => 'required',
+            'dob' => 'required',
 
-                    'email' => 'required|email',
+            'email' => 'required|email',
 
-                    'password'   => 'required'|'confirmed'
-                ]
-         )->validate();
+            'password'   => 'required|confirmed'
+        ]
+       )->validate();
 
          
          $validatedData['password']=bcrypt($validatedData['password']);
@@ -110,8 +115,22 @@ class UsersList extends Component
                     $this->UserBeingRemoved=$userId;
                     $this->dispatchBrowserEvent('confirm-delete-model');
 
+                    
+
                 }
 
+
+
+                public function deleteuser()
+                {
+                    $user=Student::findOrFail($this->UserBeingRemoved);
+
+                    $user->delete();
+
+                    $this->dispatchBrowserEvent('hide-delete-form');
+
+
+                }
 
             // <------RETURN VIEW OF---->
 
@@ -119,7 +138,7 @@ class UsersList extends Component
 
     public function render()
     {
-        $users=Student::latest()->paginate();
+        $users=Student::latest()->paginate(10);
         return view('livewire.admin.users.users-list',[
             'users' => $users,
         ]);

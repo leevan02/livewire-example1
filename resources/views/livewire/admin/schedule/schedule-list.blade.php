@@ -2,7 +2,7 @@
 
     <div class="container pt-4">
      <button wire:click.prevent="addNew" type="button" class="btn btn-primary" data-original-title="" title="">
-                Add User
+                Add Schedule
             </button>
 
         <div class="card">
@@ -19,55 +19,55 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Full Name</th>
-                        <th scope="col">email</th>
-                        <th scope="col">D.O.B</th>
+                        <th scope="col">Courses</th>
+                        <th scope="col">Class date</th>
+                        <th scope="col">Start Time</th>
 
-                        <th scope="col">Phone number</th>
-                        <th scope="col">Class</th>
-                        <th scope="col">Subject Chioces</th>
-                        <th scope="col">created</th>
+                        <th scope="col">End Time </th>
+                       
+                        
+                       
                         <th scope="col">Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                    @foreach ($users as $user)
+                        @if ($schedules)
+                            
+                    @foreach ($schedules as $items)
                         
                   
                         <tr>
                         <th scope="row">{{$loop->iteration}}</th>
-                        <td>{{$user->fname}} {{$user->lname}}</td>
-                         <td>{{$user->email}}</td>
+                        <td>{{$items->courseId}}</td>
+                         <td>{{$items->classDate}}</td>
 
-                        <td>{{$user->dob}}</td>
+                        <td>{{$items->startTime}}</td>
 
-                        <td>{{$user->pnumber_id}}</td>
-                        <td>{{$user->classes_id}}</td>
-                        <td>{{$user->subject_chioce_id}}</td>
+                        <td>{{$items->endTime}}</td>
+   
+                        
 
 
 
-                        <td>{{$user->created_at}}</td>
+                        
                         <td>
-                            <button wire:click.prevent="edit({{
-                              
-                                                $user
-                              
-                               }})" type="button" rel="tooltip" class="btn btn-success btn-just-icon btn-sm" data-original-title="" title="">
+                            <button wire:click.prevent="edit({{ $items}})" type="button" rel="tooltip" class="btn btn-success btn-just-icon btn-sm" data-original-title="" title="">
                                 <i class="material-icons">edit</i>
                             </button>
-                            <button wire:click.prevent="ConfirmDelete({{$user->id}})" type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="">
+                            <button wire:click.prevent="ConfirmDelete({{$items->id}})" type="button" rel="tooltip" class="btn btn-danger btn-just-icon btn-sm" data-original-title="" title="">
                                 <i class="material-icons">Remove</i>
                             </button>
                         </td>
                             </tr>  
                       @endforeach
+                      @endif
+
                   
                     </tbody>
                   </table>
             </div>
             <div class="card-footer">
-              {{  $users->links()}}
+              {{-- {{  $items->links()}} --}}
             </div>
             
 
@@ -91,53 +91,45 @@
   <!-- Modal -->
 <div class="modal fade" id="form" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
     <div class="modal-dialog">     
-                   <form autocomplete="off" wire:submit.prevent="{{ $ShowEditModel ?  'update' : 'CreateUser' }}">
+                   <form autocomplete="off" wire:submit.prevent="{{ $ShowEditModel ?  'update' : 'CreateSchedule' }}">
 
                         <div class="modal-content">
                           <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">
                                 @if ($ShowEditModel)
-                                <span>Edit User</span>
+                                <span>Edit teacher</span>
                                 @else
-                                <span>Add New User</span>
+                                <span>Add New Teacher</span>
                                 @endif
                               
                             </h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
+
                           <div class="modal-body">
 
 
-                        <div class="mb-3">
-                            <label for="fname" class="form-label">First Name</label>
-                            <input wire:model.defer="state.fname" type="text" class="form-control  @error('fname') is-invalid @enderror" id="fname" aria-describedby="nameHelp ">
-                        
-                          @error('fname')
-                          
-                           <div class="invalid-feedback">
-                               {{$message}}
-                           </div>
-                          @enderror
+                       
+                            <div class="mb-3">
 
+                                <select wire:model.defer="state.courseId" class="form-select" aria-label="Default select example">
+
+                                  <option selected>select Subject</option>
+                                  @foreach ($courses as $items)
+                                      
+                                 
+                                  <option value="{{ $items->id }}">{{ $items->subjectName }}</option>
+                               @endforeach
+                                </select>
+                                </div>
                         </div>
 
-                        <div class="mb-3">
-                          <label for="lname" class="form-label">Last Name</label>
-                          <input wire:model.defer="state.lname" type="text" class="form-control  @error('lname') is-invalid @enderror" id="lname" aria-describedby="nameHelp ">
-                      
-                        @error('lname')
-                        
-                         <div class="invalid-feedback">
-                             {{$message}}
-                         </div>
-                        @enderror
-
-                      </div>
+                       
 
                       <div class="mb-3">
-                        <label for="dob" class="form-label">D.O.B</label>
-                        <input wire:model.defer="state.dob" type="date" class="form-control @error('dob') is-invalid @enderror" id="dob" aria-describedby="emailHelp">
-                              @error('dob')
+                        <label for="dob" class="form-label">Class Due Date</label>
+                        <input wire:model.defer="state.classDate" type="date" class="form-control @error('classDAte') is-invalid @enderror" id="dob" aria-describedby="emailHelp">
+                              @error('classDate')
                           
                            <div class="invalid-feedback">
                                {{$message}}
@@ -146,9 +138,9 @@
                         </div>
 
                         <div class="mb-3">
-                        <label for="email" class="form-label">Email address</label>
-                        <input wire:model.defer="state.email" type="email" class="form-control @error('email') is-invalid @enderror" id="email" aria-describedby="emailHelp">
-                              @error('email')
+                        <label for="email" class="form-label">Start time</label>
+                        <input wire:model.defer="state.startTime" type="time" class="form-control @error('startTime') is-invalid @enderror" id="email" aria-describedby="emailHelp">
+                              @error('startTime')
                           
                            <div class="invalid-feedback">
                                {{$message}}
@@ -157,10 +149,11 @@
                         </div>
 
 
+
                         <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input wire:model.defer="state.password" type="password" class="form-control @error('password') is-invalid @enderror" id="password">
-                              @error('password')
+                        <label for="password" class="form-label">End Time</label>
+                        <input wire:model.defer="state.endTime" type="time" class="form-control @error('endTime') is-invalid @enderror" id="password">
+                              @error('endTime')
                           
                            <div class="invalid-feedback">
                                {{$message}}
@@ -168,13 +161,9 @@
                           @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Cofirm Password</label>
-                            <input wire:model.defer="state.password_confirmation" type="password" class="form-control" id="confirm_password">
-                        </div>
+                     
              
               
-                       </div> 
 
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -183,7 +172,7 @@
                           @if ($ShowEditModel)
                           <span>Save Changes</span>
                           @else
-                          <span>Add New User</span>
+                          <span>Add New Teacher</span>
                           @endif
 
                         </button>
@@ -224,7 +213,7 @@
               <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">
 
-                  Delete User
+                  Delete Teacher
                 </h5>
               </div>
 
@@ -232,15 +221,42 @@
 
                 <h5 class="" id="">
 
-                  Are you sure you want to delete this user ?
+                  Are you sure you want to delete this Teacher ?
                 </h5>
               </div>
 
               <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Cancel</button>
-                        <button id="button1" type="button" wire:click.prevent="deleteuser" class="btn btn-danger">Remove</button>
+                        <button id="button1" type="button" wire:click.prevent="deleteTeacher" class="btn btn-danger">Remove</button>
               </div>
              </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+<!-- End Add User Modal -->
+
+
+
+
+
+
+
+
+
 
     </div>
   </div>
